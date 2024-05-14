@@ -10,6 +10,18 @@ variable "tags" {
   default     = {}
 }
 
+variable "name" {
+  description = "Common name used across the resources created if a more specific resource name is not provided"
+  type        = string
+  default     = "ecr-endpoint"
+}
+
+variable "description" {
+  description = "Common description used across the resources created if a more specific resource description is not provided"
+  type        = string
+  default     = "ECR custom endpoint"
+}
+
 ################################################################################
 # API Gateway
 ################################################################################
@@ -188,72 +200,8 @@ variable "create_api_certificate" {
 
 variable "api_routes" {
   description = "Map of API gateway routes with integrations"
-  type = map(object({
-    # Route
-    authorizer_key             = optional(string)
-    api_key_required           = optional(bool)
-    authorization_scopes       = optional(list(string), [])
-    authorization_type         = optional(string)
-    authorizer_id              = optional(string)
-    model_selection_expression = optional(string)
-    operation_name             = optional(string)
-    request_models             = optional(map(string), {})
-    request_parameter = optional(object({
-      request_parameter_key = optional(string)
-      required              = optional(bool, false)
-    }), {})
-    route_response_selection_expression = optional(string)
-
-    # Route settings
-    data_trace_enabled       = optional(bool, false)
-    detailed_metrics_enabled = optional(bool, false)
-    logging_level            = optional(string)
-    throttling_burst_limit   = optional(number, 500)
-    throttling_rate_limit    = optional(number, 1000)
-
-    # Stage - Route response
-    route_response = optional(object({
-      create                     = optional(bool, false)
-      model_selection_expression = optional(string)
-      response_models            = optional(map(string))
-      route_response_key         = optional(string, "$default")
-    }), {})
-
-    # Integration
-    integration = object({
-      connection_id             = optional(string)
-      vpc_link_key              = optional(string)
-      connection_type           = optional(string)
-      content_handling_strategy = optional(string)
-      credentials_arn           = optional(string)
-      description               = optional(string)
-      method                    = optional(string)
-      subtype                   = optional(string)
-      type                      = optional(string, "AWS_PROXY")
-      uri                       = optional(string)
-      passthrough_behavior      = optional(string)
-      payload_format_version    = optional(string)
-      request_parameters        = optional(map(string), {})
-      request_templates         = optional(map(string), {})
-      response_parameters = optional(list(object({
-        mappings    = map(string)
-        status_code = string
-      })))
-      template_selection_expression = optional(string)
-      timeout_milliseconds          = optional(number)
-      tls_config = optional(object({
-        server_name_to_verify = optional(string)
-      }), {})
-
-      # Integration Response
-      response = optional(object({
-        content_handling_strategy     = optional(string)
-        integration_response_key      = optional(string)
-        response_templates            = optional(map(string))
-        template_selection_expression = optional(string)
-      }), {})
-    })
-  }))
+  # We can't use full type object due to `merge()` function - I don't know why yet
+  type = any
   default = {
     "ANY /{proxy+}" = {
       integration = {}
@@ -334,6 +282,166 @@ variable "api_vpc_links" {
 
 variable "api_vpc_link_tags" {
   description = "A map of tags to add to the VPC Links created"
+  type        = map(string)
+  default     = {}
+}
+
+################################################################################
+# Lambda Function
+################################################################################
+
+variable "create_lambda" {
+  description = "Whether to create Lambda function resource"
+  type        = bool
+  default     = true
+}
+
+variable "lambda_name" {
+  description = "The name of the Lambda function"
+  type        = string
+  default     = ""
+}
+
+variable "lambda_description" {
+  description = "The description of the Lambda function"
+  type        = string
+  default     = ""
+}
+
+variable "lambda_runtime" {
+  description = "The runtime environment for the Lambda function"
+  type        = string
+  default     = "python3.12"
+}
+
+variable "lambda_architectures" {
+  description = "The architectures supported by the Lambda function"
+  type        = list(string)
+  default     = ["arm64"]
+}
+
+variable "lambda_kms_key_arn" {
+  description = "The ARN of KMS key to use by your Lambda Function"
+  type        = string
+  default     = null
+}
+
+variable "lambda_memory_size" {
+  description = "Amount of memory in MB your Lambda Function can use at runtime. Valid value between 128 MB to 10,240 MB (10 GB), in 64 MB increments."
+  type        = number
+  default     = 256
+}
+
+variable "lambda_reserved_concurrent_executions" {
+  description = "The amount of reserved concurrent executions for this Lambda Function. A value of 0 disables Lambda Function from being triggered and -1 removes any concurrency limitations. Defaults to Unreserved Concurrency Limits -1."
+  type        = number
+  default     = -1
+}
+
+variable "lambda_provisioned_concurrent_executions" {
+  description = "Amount of capacity to allocate. Set to 1 or greater to enable, or set to 0 to disable provisioned concurrency."
+  type        = number
+  default     = -1
+}
+
+variable "lambda_timeout" {
+  description = "The amount of time your Lambda Function has to run in seconds."
+  type        = number
+  default     = 3
+}
+
+variable "lambda_tracing_mode" {
+  description = "Tracing mode of the Lambda Function. Valid value can be either `PassThrough` or `Active`"
+  type        = string
+  default     = null
+}
+
+variable "lambda_attach_tracing_policy" {
+  description = "Controls whether X-Ray tracing policy should be added to IAM role for Lambda Function"
+  type        = bool
+  default     = false
+}
+
+variable "create_lambda_role" {
+  description = "Controls whether IAM role for Lambda Function should be created"
+  type        = bool
+  default     = true
+}
+
+variable "lambda_role" {
+  description = " IAM role ARN attached to the Lambda Function. This governs both who / what can invoke your Lambda Function, as well as what resources our Lambda Function has access to. See Lambda Permission Model for more details."
+  type        = string
+  default     = ""
+}
+
+variable "lambda_role_description" {
+  description = "Description of IAM role to use for Lambda Function"
+  type        = string
+  default     = null
+}
+
+variable "lambda_role_permissions_boundary" {
+  description = "The ARN of the policy that is used to set the permissions boundary for the IAM role used by Lambda Function"
+  type        = string
+  default     = null
+}
+
+variable "lambda_role_maximum_session_duration" {
+  description = "Maximum session duration, in seconds, for the IAM role"
+  type        = number
+  default     = 60
+}
+
+variable "lambda_vpc_subnet_ids" {
+  description = "List of subnet ids when Lambda Function should run in the VPC. Usually private or intra subnets."
+  type        = list(string)
+  default     = null
+}
+
+variable "lambda_vpc_security_group_ids" {
+  description = "List of security group ids when Lambda Function should run in the VPC."
+  type        = list(string)
+  default     = null
+}
+
+variable "lambda_attach_network_policy" {
+  description = "Controls whether VPC/network policy should be added to IAM role for Lambda Function"
+  type        = bool
+  default     = false
+}
+
+variable "create_lambda_cloudwatch_log_group" {
+  description = "Whether to create a CloudWatch log group"
+  type        = bool
+  default     = true
+}
+
+variable "lambda_cloudwatch_logs_retention_in_days" {
+  description = "Specifies the number of days you want to retain log events in the specified log group. Possible values are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653."
+  type        = number
+  default     = null
+}
+
+variable "lambda_cloudwatch_logs_kms_key_id" {
+  description = "The ARN of the KMS Key to use when encrypting log data."
+  type        = string
+  default     = null
+}
+
+variable "lambda_cloudwatch_logs_log_group_class" {
+  description = "Specified the log class of the log group. Possible values are: `STANDARD` or `INFREQUENT_ACCESS`"
+  type        = string
+  default     = null
+}
+
+variable "lambda_environment_variables" {
+  description = "A mapping of environment variables to assign to the Lambda function"
+  type        = map(string)
+  default     = {}
+}
+
+variable "lambda_tags" {
+  description = "A mapping of tags to assign to the Lambda function"
   type        = map(string)
   default     = {}
 }

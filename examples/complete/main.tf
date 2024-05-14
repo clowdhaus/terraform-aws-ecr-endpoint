@@ -2,14 +2,11 @@ provider "aws" {
   region = local.region
 }
 
-# data "aws_availability_zones" "available" {}
-
 locals {
   region = "us-east-1"
   name   = "ex-${basename(path.cwd)}"
 
-  # vpc_cidr = "10.0.0.0/16"
-  # azs      = slice(data.aws_availability_zones.available.names, 0, 3)
+  domain = "sharedservices.clowd.haus"
 
   tags = {
     Name       = local.name
@@ -19,16 +16,22 @@ locals {
 }
 
 ################################################################################
-# ecr endpoint Module
+# ECR Endpoint Module
 ################################################################################
 
 module "ecr_endpoint" {
   source = "../.."
 
-  # API
-  api_name = local.name
+  name        = local.name
+  description = "Example public ECR Endpoint"
 
-  create_api_domain_name = false
+  # API
+  api_name        = local.name
+  api_domain_name = "*.${local.domain}"
+  api_subdomains  = ["ecr"]
+
+  # Lambda
+
 
   tags = local.tags
 }
@@ -43,19 +46,14 @@ module "ecr_endpoint_disabled" {
 # Supporting Resources
 ################################################################################
 
-# module "vpc" {
-#   source  = "terraform-aws-modules/vpc/aws"
-#   version = "~> 5.0"
+module "ecr" {
+  source  = "terraform-aws-modules/ecr/aws"
+  version = "~> 2.0"
 
-#   name = local.name
-#   cidr = local.vpc_cidr
+  repository_name = local.name
 
-#   azs             = local.azs
-#   public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
-#   private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 10)]
+  repository_force_delete = true # For example only
+  create_lifecycle_policy = false
 
-#   enable_nat_gateway = true
-#   single_nat_gateway = true
-
-#   tags = local.tags
-# }
+  tags = local.tags
+}

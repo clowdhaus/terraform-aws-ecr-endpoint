@@ -32,6 +32,7 @@ No providers.
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_ecr"></a> [ecr](#module\_ecr) | terraform-aws-modules/ecr/aws | ~> 2.0 |
 | <a name="module_ecr_endpoint"></a> [ecr\_endpoint](#module\_ecr\_endpoint) | ../.. | n/a |
 | <a name="module_ecr_endpoint_disabled"></a> [ecr\_endpoint\_disabled](#module\_ecr\_endpoint\_disabled) | ../.. | n/a |
 

@@ -33,17 +33,24 @@ Examples codified under the [`examples`](https://github.com/clowdhaus/terraform-
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.37 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_api_gateway"></a> [api\_gateway](#module\_api\_gateway) | git::https://github.com/bryantbiggs/terraform-aws-apigateway-v2.git | 95fcb7a077f008d32733edcdda96d4a4c54eec27 |
+| <a name="module_lambda_function"></a> [lambda\_function](#module\_lambda\_function) | terraform-aws-modules/lambda/aws | 7.4.0 |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
+| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
 ## Inputs
 
@@ -63,7 +70,7 @@ No resources.
 | <a name="input_api_name"></a> [api\_name](#input\_api\_name) | The name of the API. Must be less than or equal to 128 characters in length | `string` | `""` | no |
 | <a name="input_api_route_key"></a> [api\_route\_key](#input\_api\_route\_key) | Part of quick create. Specifies any route key | `string` | `null` | no |
 | <a name="input_api_route_selection_expression"></a> [api\_route\_selection\_expression](#input\_api\_route\_selection\_expression) | The route selection expression for the API. Defaults to `$request.method $request.path` | `string` | `null` | no |
-| <a name="input_api_routes"></a> [api\_routes](#input\_api\_routes) | Map of API gateway routes with integrations | <pre>map(object({<br>    # Route<br>    authorizer_key             = optional(string)<br>    api_key_required           = optional(bool)<br>    authorization_scopes       = optional(list(string), [])<br>    authorization_type         = optional(string)<br>    authorizer_id              = optional(string)<br>    model_selection_expression = optional(string)<br>    operation_name             = optional(string)<br>    request_models             = optional(map(string), {})<br>    request_parameter = optional(object({<br>      request_parameter_key = optional(string)<br>      required              = optional(bool, false)<br>    }), {})<br>    route_response_selection_expression = optional(string)<br><br>    # Route settings<br>    data_trace_enabled       = optional(bool, false)<br>    detailed_metrics_enabled = optional(bool, false)<br>    logging_level            = optional(string)<br>    throttling_burst_limit   = optional(number, 500)<br>    throttling_rate_limit    = optional(number, 1000)<br><br>    # Stage - Route response<br>    route_response = optional(object({<br>      create                     = optional(bool, false)<br>      model_selection_expression = optional(string)<br>      response_models            = optional(map(string))<br>      route_response_key         = optional(string, "$default")<br>    }), {})<br><br>    # Integration<br>    integration = object({<br>      connection_id             = optional(string)<br>      vpc_link_key              = optional(string)<br>      connection_type           = optional(string)<br>      content_handling_strategy = optional(string)<br>      credentials_arn           = optional(string)<br>      description               = optional(string)<br>      method                    = optional(string)<br>      subtype                   = optional(string)<br>      type                      = optional(string, "AWS_PROXY")<br>      uri                       = optional(string)<br>      passthrough_behavior      = optional(string)<br>      payload_format_version    = optional(string)<br>      request_parameters        = optional(map(string), {})<br>      request_templates         = optional(map(string), {})<br>      response_parameters = optional(list(object({<br>        mappings    = map(string)<br>        status_code = string<br>      })))<br>      template_selection_expression = optional(string)<br>      timeout_milliseconds          = optional(number)<br>      tls_config = optional(object({<br>        server_name_to_verify = optional(string)<br>      }), {})<br><br>      # Integration Response<br>      response = optional(object({<br>        content_handling_strategy     = optional(string)<br>        integration_response_key      = optional(string)<br>        response_templates            = optional(map(string))<br>        template_selection_expression = optional(string)<br>      }), {})<br>    })<br>  }))</pre> | <pre>{<br>  "ANY /{proxy+}": {<br>    "integration": {}<br>  }<br>}</pre> | no |
+| <a name="input_api_routes"></a> [api\_routes](#input\_api\_routes) | Map of API gateway routes with integrations | `any` | <pre>{<br>  "ANY /{proxy+}": {<br>    "integration": {}<br>  }<br>}</pre> | no |
 | <a name="input_api_stage_access_log_settings"></a> [api\_stage\_access\_log\_settings](#input\_api\_stage\_access\_log\_settings) | Settings for logging access in this stage. Use the aws\_api\_gateway\_account resource to configure [permissions for CloudWatch Logging](https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-logging.html#set-up-access-logging-permissions) | <pre>object({<br>    create_log_group            = optional(bool, true)<br>    destination_arn             = optional(string)<br>    format                      = optional(string)<br>    log_group_name              = optional(string)<br>    log_group_retention_in_days = optional(number, 30)<br>    log_group_kms_key_id        = optional(string)<br>    log_group_skip_destroy      = optional(bool)<br>    log_group_class             = optional(string)<br>    log_group_tags              = optional(map(string), {})<br>  })</pre> | `{}` | no |
 | <a name="input_api_stage_default_route_settings"></a> [api\_stage\_default\_route\_settings](#input\_api\_stage\_default\_route\_settings) | The default route settings for the stage | <pre>object({<br>    data_trace_enabled       = optional(bool, false)<br>    detailed_metrics_enabled = optional(bool, false)<br>    logging_level            = optional(string)<br>    throttling_burst_limit   = optional(number, 500)<br>    throttling_rate_limit    = optional(number, 1000)<br>  })</pre> | `{}` | no |
 | <a name="input_api_stage_description"></a> [api\_stage\_description](#input\_api\_stage\_description) | The description for the stage. Must be less than or equal to 1024 characters in length | `string` | `null` | no |
@@ -81,6 +88,34 @@ No resources.
 | <a name="input_create_api_certificate"></a> [create\_api\_certificate](#input\_create\_api\_certificate) | Whether to create a certificate for the domain | `bool` | `true` | no |
 | <a name="input_create_api_domain_name"></a> [create\_api\_domain\_name](#input\_create\_api\_domain\_name) | Whether to create API domain name resource | `bool` | `true` | no |
 | <a name="input_create_api_domain_records"></a> [create\_api\_domain\_records](#input\_create\_api\_domain\_records) | Whether to create Route53 records for the domain name | `bool` | `true` | no |
+| <a name="input_create_lambda"></a> [create\_lambda](#input\_create\_lambda) | Whether to create Lambda function resource | `bool` | `true` | no |
+| <a name="input_create_lambda_cloudwatch_log_group"></a> [create\_lambda\_cloudwatch\_log\_group](#input\_create\_lambda\_cloudwatch\_log\_group) | Whether to create a CloudWatch log group | `bool` | `true` | no |
+| <a name="input_create_lambda_role"></a> [create\_lambda\_role](#input\_create\_lambda\_role) | Controls whether IAM role for Lambda Function should be created | `bool` | `true` | no |
+| <a name="input_description"></a> [description](#input\_description) | Common description used across the resources created if a more specific resource description is not provided | `string` | `"ECR custom endpoint"` | no |
+| <a name="input_lambda_architectures"></a> [lambda\_architectures](#input\_lambda\_architectures) | The architectures supported by the Lambda function | `list(string)` | <pre>[<br>  "arm64"<br>]</pre> | no |
+| <a name="input_lambda_attach_network_policy"></a> [lambda\_attach\_network\_policy](#input\_lambda\_attach\_network\_policy) | Controls whether VPC/network policy should be added to IAM role for Lambda Function | `bool` | `false` | no |
+| <a name="input_lambda_attach_tracing_policy"></a> [lambda\_attach\_tracing\_policy](#input\_lambda\_attach\_tracing\_policy) | Controls whether X-Ray tracing policy should be added to IAM role for Lambda Function | `bool` | `false` | no |
+| <a name="input_lambda_cloudwatch_logs_kms_key_id"></a> [lambda\_cloudwatch\_logs\_kms\_key\_id](#input\_lambda\_cloudwatch\_logs\_kms\_key\_id) | The ARN of the KMS Key to use when encrypting log data. | `string` | `null` | no |
+| <a name="input_lambda_cloudwatch_logs_log_group_class"></a> [lambda\_cloudwatch\_logs\_log\_group\_class](#input\_lambda\_cloudwatch\_logs\_log\_group\_class) | Specified the log class of the log group. Possible values are: `STANDARD` or `INFREQUENT_ACCESS` | `string` | `null` | no |
+| <a name="input_lambda_cloudwatch_logs_retention_in_days"></a> [lambda\_cloudwatch\_logs\_retention\_in\_days](#input\_lambda\_cloudwatch\_logs\_retention\_in\_days) | Specifies the number of days you want to retain log events in the specified log group. Possible values are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653. | `number` | `null` | no |
+| <a name="input_lambda_description"></a> [lambda\_description](#input\_lambda\_description) | The description of the Lambda function | `string` | `""` | no |
+| <a name="input_lambda_environment_variables"></a> [lambda\_environment\_variables](#input\_lambda\_environment\_variables) | A mapping of environment variables to assign to the Lambda function | `map(string)` | `{}` | no |
+| <a name="input_lambda_kms_key_arn"></a> [lambda\_kms\_key\_arn](#input\_lambda\_kms\_key\_arn) | The ARN of KMS key to use by your Lambda Function | `string` | `null` | no |
+| <a name="input_lambda_memory_size"></a> [lambda\_memory\_size](#input\_lambda\_memory\_size) | Amount of memory in MB your Lambda Function can use at runtime. Valid value between 128 MB to 10,240 MB (10 GB), in 64 MB increments. | `number` | `256` | no |
+| <a name="input_lambda_name"></a> [lambda\_name](#input\_lambda\_name) | The name of the Lambda function | `string` | `""` | no |
+| <a name="input_lambda_provisioned_concurrent_executions"></a> [lambda\_provisioned\_concurrent\_executions](#input\_lambda\_provisioned\_concurrent\_executions) | Amount of capacity to allocate. Set to 1 or greater to enable, or set to 0 to disable provisioned concurrency. | `number` | `-1` | no |
+| <a name="input_lambda_reserved_concurrent_executions"></a> [lambda\_reserved\_concurrent\_executions](#input\_lambda\_reserved\_concurrent\_executions) | The amount of reserved concurrent executions for this Lambda Function. A value of 0 disables Lambda Function from being triggered and -1 removes any concurrency limitations. Defaults to Unreserved Concurrency Limits -1. | `number` | `-1` | no |
+| <a name="input_lambda_role"></a> [lambda\_role](#input\_lambda\_role) | IAM role ARN attached to the Lambda Function. This governs both who / what can invoke your Lambda Function, as well as what resources our Lambda Function has access to. See Lambda Permission Model for more details. | `string` | `""` | no |
+| <a name="input_lambda_role_description"></a> [lambda\_role\_description](#input\_lambda\_role\_description) | Description of IAM role to use for Lambda Function | `string` | `null` | no |
+| <a name="input_lambda_role_maximum_session_duration"></a> [lambda\_role\_maximum\_session\_duration](#input\_lambda\_role\_maximum\_session\_duration) | Maximum session duration, in seconds, for the IAM role | `number` | `60` | no |
+| <a name="input_lambda_role_permissions_boundary"></a> [lambda\_role\_permissions\_boundary](#input\_lambda\_role\_permissions\_boundary) | The ARN of the policy that is used to set the permissions boundary for the IAM role used by Lambda Function | `string` | `null` | no |
+| <a name="input_lambda_runtime"></a> [lambda\_runtime](#input\_lambda\_runtime) | The runtime environment for the Lambda function | `string` | `"python3.12"` | no |
+| <a name="input_lambda_tags"></a> [lambda\_tags](#input\_lambda\_tags) | A mapping of tags to assign to the Lambda function | `map(string)` | `{}` | no |
+| <a name="input_lambda_timeout"></a> [lambda\_timeout](#input\_lambda\_timeout) | The amount of time your Lambda Function has to run in seconds. | `number` | `3` | no |
+| <a name="input_lambda_tracing_mode"></a> [lambda\_tracing\_mode](#input\_lambda\_tracing\_mode) | Tracing mode of the Lambda Function. Valid value can be either `PassThrough` or `Active` | `string` | `null` | no |
+| <a name="input_lambda_vpc_security_group_ids"></a> [lambda\_vpc\_security\_group\_ids](#input\_lambda\_vpc\_security\_group\_ids) | List of security group ids when Lambda Function should run in the VPC. | `list(string)` | `null` | no |
+| <a name="input_lambda_vpc_subnet_ids"></a> [lambda\_vpc\_subnet\_ids](#input\_lambda\_vpc\_subnet\_ids) | List of subnet ids when Lambda Function should run in the VPC. Usually private or intra subnets. | `list(string)` | `null` | no |
+| <a name="input_name"></a> [name](#input\_name) | Common name used across the resources created if a more specific resource name is not provided | `string` | `"ecr-endpoint"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A mapping of tags to assign to resources created | `map(string)` | `{}` | no |
 
 ## Outputs
@@ -96,7 +131,7 @@ No resources.
 | <a name="output_api_domain_name_hosted_zone_id"></a> [api\_domain\_name\_hosted\_zone\_id](#output\_api\_domain\_name\_hosted\_zone\_id) | The Amazon Route 53 Hosted Zone ID of the endpoint |
 | <a name="output_api_domain_name_id"></a> [api\_domain\_name\_id](#output\_api\_domain\_name\_id) | The domain name identifier |
 | <a name="output_api_domain_name_target_domain_name"></a> [api\_domain\_name\_target\_domain\_name](#output\_api\_domain\_name\_target\_domain\_name) | The target domain name |
-| <a name="output_api_endpoint"></a> [api\_endpoint](#output\_api\_endpoint) | URI of the API, of the form `https://{api-id}.execute-api.{region}.amazonaws.com` for HTTP APIs and `wss://{api-id}.execute-api.{region}.amazonaws.com` for WebSocket APIs |
+| <a name="output_api_endpoint"></a> [api\_endpoint](#output\_api\_endpoint) | URI of the API, of the form `https://{api-id}.execute-api.{region}.amazonaws.com` |
 | <a name="output_api_execution_arn"></a> [api\_execution\_arn](#output\_api\_execution\_arn) | The ARN prefix to be used in an `aws_lambda_permission`'s `source_arn` attribute or in an `aws_iam_policy` to authorize access to the `@connections` API |
 | <a name="output_api_id"></a> [api\_id](#output\_api\_id) | The API identifier |
 | <a name="output_api_integrations"></a> [api\_integrations](#output\_api\_integrations) | Map of the integrations created and their attributes |
@@ -108,6 +143,12 @@ No resources.
 | <a name="output_api_stage_id"></a> [api\_stage\_id](#output\_api\_stage\_id) | The stage identifier |
 | <a name="output_api_stage_invoke_url"></a> [api\_stage\_invoke\_url](#output\_api\_stage\_invoke\_url) | The URL to invoke the API pointing to the stage |
 | <a name="output_api_vpc_links"></a> [api\_vpc\_links](#output\_api\_vpc\_links) | Map of VPC links created and their attributes |
+| <a name="output_lambda_function_arn"></a> [lambda\_function\_arn](#output\_lambda\_function\_arn) | The ARN of the Lambda Function |
+| <a name="output_lambda_function_name"></a> [lambda\_function\_name](#output\_lambda\_function\_name) | The name of the Lambda Function |
+| <a name="output_lambda_function_qualified_arn"></a> [lambda\_function\_qualified\_arn](#output\_lambda\_function\_qualified\_arn) | The ARN identifying your Lambda Function Version |
+| <a name="output_lambda_role_arn"></a> [lambda\_role\_arn](#output\_lambda\_role\_arn) | The ARN of the IAM role created for the Lambda Function |
+| <a name="output_lambda_role_name"></a> [lambda\_role\_name](#output\_lambda\_role\_name) | The name of the IAM role created for the Lambda Function |
+| <a name="output_lambda_role_unique_id"></a> [lambda\_role\_unique\_id](#output\_lambda\_role\_unique\_id) | The unique id of the IAM role created for the Lambda Function |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## License

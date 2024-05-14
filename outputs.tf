@@ -8,7 +8,7 @@ output "api_id" {
 }
 
 output "api_endpoint" {
-  description = "URI of the API, of the form `https://{api-id}.execute-api.{region}.amazonaws.com` for HTTP APIs and `wss://{api-id}.execute-api.{region}.amazonaws.com` for WebSocket APIs"
+  description = "URI of the API, of the form `https://{api-id}.execute-api.{region}.amazonaws.com`"
   value       = module.api_gateway.api_endpoint
 }
 
@@ -137,4 +137,42 @@ output "api_stage_access_logs_cloudwatch_log_group_arn" {
 output "api_vpc_links" {
   description = "Map of VPC links created and their attributes"
   value       = module.api_gateway.vpc_links
+}
+
+################################################################################
+# Lambda Function
+################################################################################
+
+output "lambda_function_arn" {
+  description = "The ARN of the Lambda Function"
+  value       = module.lambda_function.lambda_function_arn
+}
+
+output "lambda_function_name" {
+  description = "The name of the Lambda Function"
+  value       = module.lambda_function.lambda_function_name
+}
+
+output "lambda_function_qualified_arn" {
+  description = "The ARN identifying your Lambda Function Version"
+  value       = module.lambda_function.lambda_function_qualified_arn
+}
+
+################################################################################
+# Lambda IAM Role
+################################################################################
+
+output "lambda_role_arn" {
+  description = "The ARN of the IAM role created for the Lambda Function"
+  value       = module.lambda_function.lambda_role_arn
+}
+
+output "lambda_role_name" {
+  description = "The name of the IAM role created for the Lambda Function"
+  value       = module.lambda_function.lambda_role_name
+}
+
+output "lambda_role_unique_id" {
+  description = "The unique id of the IAM role created for the Lambda Function"
+  value       = module.lambda_function.lambda_role_unique_id
 }
