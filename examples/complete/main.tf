@@ -6,8 +6,6 @@ locals {
   region = "us-east-1"
   name   = "ex-${basename(path.cwd)}"
 
-  domain = "sharedservices.clowd.haus"
-
   tags = {
     Name       = local.name
     Example    = local.name
@@ -27,11 +25,8 @@ module "ecr_endpoint" {
 
   # API
   api_name        = local.name
-  api_domain_name = "*.${local.domain}"
+  api_domain_name = "*.${var.domain_name}"
   api_subdomains  = ["ecr"]
-
-  # Lambda
-
 
   tags = local.tags
 }
@@ -46,7 +41,7 @@ module "ecr_endpoint_disabled" {
 # Supporting Resources
 ################################################################################
 
-module "ecr" {
+module "ecr_repository" {
   source  = "terraform-aws-modules/ecr/aws"
   version = "~> 2.0"
 

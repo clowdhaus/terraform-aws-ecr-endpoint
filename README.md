@@ -10,6 +10,13 @@ See [`examples`](https://github.com/clowdhaus/terraform-aws-ecr-endpoint/tree/ma
 module "ecr_endpoint" {
   source = "clowdhaus/ecr-endpoint/aws"
 
+  name        = "Example"
+  description = "Example public ECR Endpoint"
+
+  # API
+  api_domain_name = "*.myorganization.com"
+  api_subdomains  = ["ecr"]
+
   tags = {
     Terraform   = "true"
     Environment = "dev"

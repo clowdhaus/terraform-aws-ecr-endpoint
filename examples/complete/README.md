@@ -2,16 +2,32 @@
 
 Configuration in this directory creates:
 
-- <XXX>
+- HTTP API Gateway with a custom domain name
+- Lambda function integrated with HTTP API Gateway to handle requests
+- The necessary Route53 records and ACM certificate for the custom domain name (the Route53 hosted zone will need to exist prior to running this example)
+- An ECR repository for demonstration purposes
 
 ## Usage
 
 To run this example you need to execute:
 
-```bash
-$ terraform init
-$ terraform plan
-$ terraform apply
+```sh
+terraform init
+terraform plan -var="domain_name=myorganization.com"
+terraform apply
+```
+
+Once the example has deployed, you can authenticate to ECR via the custom endpoint using:
+
+```sh
+aws ecr get-login-password --region us-east-1 | \
+    docker login --username AWS --password-stdin ecr.myorganization.com
+```
+
+You can then push/pull images to and from your ECR repository via the custom endpoint:
+
+```sh
+docker push ecr.myorganization.com/my-image:latest
 ```
 
 Note that this example may create resources which will incur monetary charges on your AWS bill. Run `terraform destroy` when you no longer need these resources.
@@ -32,9 +48,9 @@ No providers.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_ecr"></a> [ecr](#module\_ecr) | terraform-aws-modules/ecr/aws | ~> 2.0 |
 | <a name="module_ecr_endpoint"></a> [ecr\_endpoint](#module\_ecr\_endpoint) | ../.. | n/a |
 | <a name="module_ecr_endpoint_disabled"></a> [ecr\_endpoint\_disabled](#module\_ecr\_endpoint\_disabled) | ../.. | n/a |
+| <a name="module_ecr_repository"></a> [ecr\_repository](#module\_ecr\_repository) | terraform-aws-modules/ecr/aws | ~> 2.0 |
 
 ## Resources
 
@@ -42,7 +58,9 @@ No resources.
 
 ## Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Custom domain name to use on API Gateway endpoint | `string` | `"sharedservices.clowd.haus"` | no |
 
 ## Outputs
 
