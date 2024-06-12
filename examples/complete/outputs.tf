@@ -138,3 +138,12 @@ output "api_vpc_links" {
   description = "Map of VPC links created and their attributes"
   value       = module.ecr_endpoint.api_vpc_links
 }
+
+################################################################################
+# Helpers
+################################################################################
+
+output "ecr_login" {
+  description = "Command to login to ECR"
+  value       = "aws ecr get-login-password --region ${local.region} | docker login --username AWS --password-stdin ecr.${var.domain_name}"
+}

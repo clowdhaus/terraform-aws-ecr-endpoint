@@ -48,7 +48,7 @@ Examples codified under the [`examples`](https://github.com/clowdhaus/terraform-
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_api_gateway"></a> [api\_gateway](#module\_api\_gateway) | git::https://github.com/bryantbiggs/terraform-aws-apigateway-v2.git | 95fcb7a077f008d32733edcdda96d4a4c54eec27 |
+| <a name="module_api_gateway"></a> [api\_gateway](#module\_api\_gateway) | terraform-aws-modules/apigateway-v2/aws | 5.0.0 |
 | <a name="module_lambda_function"></a> [lambda\_function](#module\_lambda\_function) | terraform-aws-modules/lambda/aws | 7.4.0 |
 
 ## Resources
@@ -114,7 +114,7 @@ Examples codified under the [`examples`](https://github.com/clowdhaus/terraform-
 | <a name="input_lambda_reserved_concurrent_executions"></a> [lambda\_reserved\_concurrent\_executions](#input\_lambda\_reserved\_concurrent\_executions) | The amount of reserved concurrent executions for this Lambda Function. A value of 0 disables Lambda Function from being triggered and -1 removes any concurrency limitations. Defaults to Unreserved Concurrency Limits -1. | `number` | `-1` | no |
 | <a name="input_lambda_role"></a> [lambda\_role](#input\_lambda\_role) | IAM role ARN attached to the Lambda Function. This governs both who / what can invoke your Lambda Function, as well as what resources our Lambda Function has access to. See Lambda Permission Model for more details. | `string` | `""` | no |
 | <a name="input_lambda_role_description"></a> [lambda\_role\_description](#input\_lambda\_role\_description) | Description of IAM role to use for Lambda Function | `string` | `null` | no |
-| <a name="input_lambda_role_maximum_session_duration"></a> [lambda\_role\_maximum\_session\_duration](#input\_lambda\_role\_maximum\_session\_duration) | Maximum session duration, in seconds, for the IAM role | `number` | `60` | no |
+| <a name="input_lambda_role_maximum_session_duration"></a> [lambda\_role\_maximum\_session\_duration](#input\_lambda\_role\_maximum\_session\_duration) | Maximum session duration, in seconds, for the IAM role | `number` | `null` | no |
 | <a name="input_lambda_role_permissions_boundary"></a> [lambda\_role\_permissions\_boundary](#input\_lambda\_role\_permissions\_boundary) | The ARN of the policy that is used to set the permissions boundary for the IAM role used by Lambda Function | `string` | `null` | no |
 | <a name="input_lambda_runtime"></a> [lambda\_runtime](#input\_lambda\_runtime) | The runtime environment for the Lambda function | `string` | `"python3.12"` | no |
 | <a name="input_lambda_tags"></a> [lambda\_tags](#input\_lambda\_tags) | A mapping of tags to assign to the Lambda function | `map(string)` | `{}` | no |

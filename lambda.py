@@ -6,7 +6,7 @@ ENABLE_DEBUG = os.environ.get('DEBUG', 'false').lower() == 'true'
 
 def handler(event, context):
     if ENABLE_DEBUG:
-        print(json.dumps(event))
+        print(json.dumps({'Event': event}))
 
     ecr_url = os.environ["AWS_ECR_DEFAULT_REGISTRY_URL"]
     raw_path = event.get('rawPath')
@@ -20,6 +20,6 @@ def handler(event, context):
     }
 
     if ENABLE_DEBUG:
-        print(json.dumps(response))
+        print(json.dumps({'Response': response}))
 
     return response

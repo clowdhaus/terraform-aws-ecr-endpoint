@@ -389,7 +389,7 @@ variable "lambda_role_permissions_boundary" {
 variable "lambda_role_maximum_session_duration" {
   description = "Maximum session duration, in seconds, for the IAM role"
   type        = number
-  default     = 60
+  default     = null
 }
 
 variable "lambda_vpc_subnet_ids" {

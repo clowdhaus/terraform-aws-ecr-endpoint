@@ -27,6 +27,8 @@ aws ecr get-login-password --region us-east-1 | \
 You can then push/pull images to and from your ECR repository via the custom endpoint:
 
 ```sh
+docker pull busybox:latest
+docker tag busybox:latest ecr.myorganization.com/my-image:latest
 docker push ecr.myorganization.com/my-image:latest
 ```
 
@@ -87,6 +89,7 @@ No resources.
 | <a name="output_api_stage_id"></a> [api\_stage\_id](#output\_api\_stage\_id) | The stage identifier |
 | <a name="output_api_stage_invoke_url"></a> [api\_stage\_invoke\_url](#output\_api\_stage\_invoke\_url) | The URL to invoke the API pointing to the stage |
 | <a name="output_api_vpc_links"></a> [api\_vpc\_links](#output\_api\_vpc\_links) | Map of VPC links created and their attributes |
+| <a name="output_ecr_login"></a> [ecr\_login](#output\_ecr\_login) | Command to login to ECR |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 Apache-2.0 Licensed. See [LICENSE](https://github.com/clowdhaus/terraform-aws-ecr-endpoint/blob/main/LICENSE).

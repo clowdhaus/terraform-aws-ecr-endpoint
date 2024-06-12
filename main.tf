@@ -21,7 +21,8 @@ locals {
 }
 
 module "api_gateway" {
-  source = "git::https://github.com/bryantbiggs/terraform-aws-apigateway-v2.git?ref=95fcb7a077f008d32733edcdda96d4a4c54eec27"
+  source  = "terraform-aws-modules/apigateway-v2/aws"
+  version = "5.0.0"
 
   create = var.create && var.create_api
 
