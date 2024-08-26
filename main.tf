@@ -22,7 +22,7 @@ locals {
 
 module "api_gateway" {
   source  = "terraform-aws-modules/apigateway-v2/aws"
-  version = "5.0.0"
+  version = "5.1.3"
 
   create = var.create && var.create_api
 
@@ -82,7 +82,7 @@ module "api_gateway" {
 
 module "lambda_function" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "7.4.0"
+  version = "7.8.1"
 
   create = var.create && var.create_api && var.create_lambda
 
